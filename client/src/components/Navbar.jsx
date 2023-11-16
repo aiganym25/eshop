@@ -10,17 +10,24 @@ function Navbar() {
     const dispatch = useDispatch();
     const authUsername = useSelector((state) => state.authUsername.authUsername);
     const basket = useSelector((state) => state.basket.basket);
+    const productsFromLocalStorage = localStorage.getItem("products");
+
     const signOut = () => {
         localStorage.removeItem("user");
         dispatch(setAuthUserName(""));
         navigate("/login");
     };
 
+    const onSearchInputChange = (e) => {
+        console.log(e.target.value);
+        c
+    }
+
     return (
         <Container>
             <Inner>
                 <SearchBar>
-                    <input type="text" placeholder="Search..." />
+                    <input type="text" placeholder="Search..." onChange={onSearchInputChange} />
                 </SearchBar>
                 <RightContainer>
                     <NavButton
@@ -29,7 +36,7 @@ function Navbar() {
                         <p>Hello,</p>
                         <p>{authUsername ?? "Guest"}</p>
                     </NavButton>
-                    <BasketButton onClick={() => navigate("/")}>
+                    <BasketButton onClick={() => navigate("/checkout")}>
                         <img src="./basket-icon.png" alt="" />
                         <p>{basket.length}</p>
                     </BasketButton>
@@ -76,6 +83,8 @@ const SearchBar = styled.div`
     height: 100%;
     border: none;
     border-radius: 5px;
+    padding-left: 10px;
+    font-size: 16px;
 
     &::placeholder {
       padding-left: 5px;

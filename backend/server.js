@@ -1,14 +1,14 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require("mongoose");
-const Users = require("./Users");
+const Users = require("./models/Users");
 const bcrypt = require("bcryptjs");
-const Products = require("./Products");
+const Products = require("./models/Products");
 const router = require("./routes/router");
-const DefaultProductsData = require("./defaultProductData");
+const DefaultProductsData = require("./routes/defaultProductData");
 
 const app = express();
-const port = 3001;
+const port = 3003;
 
 // middleware
 app.use(express.json())
@@ -28,9 +28,6 @@ mongoose.connect(connection_url, {
     .catch((error) => {
         console.error('Error connecting to MongoDB:', error.message);
     });
-
-
-
 
 
 app.listen(port, () => console.log('listening on the port', port));

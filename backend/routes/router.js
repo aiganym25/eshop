@@ -1,8 +1,8 @@
 const express = require("express");
 const router = new express.Router();
 
-const Products = require("../Products");
-const Users = require("../Users");
+const Products = require("../models/Products");
+const Users = require("../models/Users");
 const bcrypt = require("bcryptjs");
 
 router.get("/getProducts", async(req, res) => {

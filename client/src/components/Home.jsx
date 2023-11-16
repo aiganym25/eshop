@@ -3,33 +3,21 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Card from "./Card";
 import Navbar from "./Navbar";
+import {useDispatch, useSelector} from "react-redux";
+import {setProducts} from "../stores/productsSlices.js";
 
 function Home() {
-    const [products, setProducts] = useState("");
-
-    useEffect(() => {
-        const fetchdata = async () => {
-            const data = await axios.get("http://localhost:3001/getProducts");
-            setProducts(data);
-        };
-        fetchdata();
-    }, []);
-
-
-
+    const storedProducts = localStorage.getItem("products");
+    const products = storedProducts ? JSON.parse(storedProducts) : null;
     return (
         <Container>
             <Navbar />
-
             <Main>
                 {products &&
                     products?.data.map((product) => (
                         <Card
-                            id={product.id}
-                            image={product.url}
-                            price={product.price}
-                            rating={product.rating}
-                            title={product.title}
+                            key={product.id}
+                            product={product}
                         />
                     ))}
             </Main>

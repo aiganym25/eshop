@@ -1,21 +1,26 @@
 import styled from "styled-components";
+import {useDispatch, useSelector} from "react-redux";
+import {addBasket} from "../stores/backetSlice.js";
 // import Rating from "@material-ui/lab/Rating";
 
-function Card({ id, image, title, price, rating }) {
-    const addToBasket = (e) => {
-        e.preventDefault();
-    };
+function Card({product}) {
 
+    const dispatch = useDispatch();
+
+
+    const addToBasket = (product) => {
+         dispatch(addBasket(product))
+    };
     return (
         <Container>
             <Image>
-                <img src={image} alt="" />
+                <img src={product.url} alt="" />
             </Image>
             <Description>
-                <h5>{title.shortTitle}</h5>
-                <p>₹ {price.cost}</p>
+                <h5>{product.title.shortTitle}</h5>
+                <p> {product.price.cost} tenge</p>
 
-                <button onClick={addToBasket}>Add to Cart</button>
+                <button onClick={() => addToBasket(product)}>Add to Cart</button>
             </Description>
         </Container>
     );

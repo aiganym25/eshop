@@ -4,6 +4,7 @@ import styled from "styled-components";
 import axios from "axios";
 import {useDispatch} from "react-redux";
 import {setAuthUserName} from "../stores/userSlice.js";
+import {setProducts} from "../stores/productsSlices.js";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -15,20 +16,21 @@ const Login = () => {
     e.preventDefault();
 
     axios
-      .post("http://localhost:3001/auth/login", { email, password })
-      .then((res) => {
-        if (!res.data.error) {
-            dispatch(setAuthUserName(res.data.fullName));
-            console.log(res.data.fullName);
+      .post("http://localhost:3003/auth/login", { email, password })
+      .then(async (res) => {
+          if (!res.data.error) {
+              dispatch(setAuthUserName(res.data.fullName));
+              localStorage.setItem("user", JSON.stringify(res.data));
 
+              const productsData = await axios.get("http://localhost:3003/getProducts");
+              dispatch(setProducts(productsData));
+              localStorage.setItem("products", JSON.stringify(productsData));
 
-          localStorage.setItem("user", JSON.stringify(res.data));
+              navigate("/");
+          } else if (res.data.error) {
+              alert(res.data.error);
 
-          navigate("/");
-        } else if (res.data.error) {
-          alert(res.data.error);
-
-        }
+          }
       })
     .catch((err) => console.warn(err));
   };

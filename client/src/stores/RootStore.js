@@ -5,9 +5,10 @@ import {basketSlice} from "./backetSlice.js";
 
 const store = configureStore({
     reducer: {
-        listOfProducts: productsSlices.reducer,
+        products: productsSlices.reducer,
         authUsername: authUsernameSlice.reducer,
         basket: basketSlice.reducer,
+
     }
 });
 

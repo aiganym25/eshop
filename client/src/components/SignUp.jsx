@@ -4,6 +4,7 @@ import styled from "styled-components";
 import axios from "axios"
 import {setAuthUserName} from "../stores/userSlice.js";
 import {useDispatch} from "react-redux";
+import {setProducts} from "../stores/productsSlices.js";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -16,11 +17,17 @@ export default function SignUp() {
     e.preventDefault();
 
     axios
-      .post("http://localhost:3001/auth/signup", { email, password, fullName })
+      .post("http://localhost:3003/auth/signup", { email, password, fullName })
       .then((res) =>  {
           navigate("/login");
           dispatch(setAuthUserName(fullName));
-      })
+      }).then(() => {
+        const fetchdata = async () => {
+            const data = await axios.get("http://localhost:3003/getProducts");
+            dispatch(setProducts(data))
+        };
+        fetchdata();
+    })
       .catch((err) => console.warn(err));
   };
   return (

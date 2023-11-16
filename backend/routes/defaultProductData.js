@@ -1,5 +1,5 @@
-const Products = require("./Products");
-const productsData = require("./constants/productsData");
+const Products = require("../models/Products");
+const productsData = require("../constants/productsData");
 
 const DefaultProductsData = async()=>{
     try {

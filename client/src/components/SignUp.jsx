@@ -21,13 +21,7 @@ export default function SignUp() {
       .then((res) =>  {
           navigate("/login");
           dispatch(setAuthUserName(fullName));
-      }).then(() => {
-        const fetchdata = async () => {
-            const data = await axios.get("http://localhost:3003/getProducts");
-            dispatch(setProducts(data))
-        };
-        fetchdata();
-    })
+      })
       .catch((err) => console.warn(err));
   };
   return (

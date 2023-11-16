@@ -5,6 +5,7 @@ import axios from "axios";
 import {useDispatch} from "react-redux";
 import {setAuthUserName} from "../stores/userSlice.js";
 import {setProducts} from "../stores/productsSlices.js";
+import {setCategories} from "../stores/categorySlice.js";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -19,12 +20,19 @@ const Login = () => {
       .post("http://localhost:3003/auth/login", { email, password })
       .then(async (res) => {
           if (!res.data.error) {
+              // username
               dispatch(setAuthUserName(res.data.fullName));
               localStorage.setItem("user", JSON.stringify(res.data));
 
+              // products
               const productsData = await axios.get("http://localhost:3003/getProducts");
               dispatch(setProducts(productsData));
               localStorage.setItem("products", JSON.stringify(productsData));
+
+              // categories
+              const categories = productsData.data.map((product) => product.category);
+              dispatch(setCategories(categories));
+              localStorage.setItem("categories", categories);
 
               navigate("/");
           } else if (res.data.error) {
@@ -37,7 +45,7 @@ const Login = () => {
 
   return (
     <FormContainer>
-      <h3>Sign-In </h3>
+      <h3>Log in to your account </h3>
       <InputContainer>
         <p>Email</p>
         <input

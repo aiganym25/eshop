@@ -3,16 +3,26 @@ import {useNavigate} from "react-router-dom";
 import Navbar from "./Navbar.jsx";
 import CurrencyFormat from "react-currency-format";
 import styled from "styled-components";
-import {getBasketTotal, reduceBasket} from "../stores/backetSlice.js";
+import {addBasket, emptyBasket, getBasketTotal, reduceBasket} from "../stores/backetSlice.js";
+import {addBoughtProducts} from "../stores/productsSlices.js";
 const Checkout = () => {
      const basket = useSelector((state) => state.basket.basket);
-     const navigate = useNavigate();
      const dispatch = useDispatch();
 
      const removeFromBasket = (e, id) => {
          // e.preventDefault();
          dispatch(reduceBasket(id))
      };
+
+     const handleBuyProducts = () => {
+         alert("You have successfully bought these products");
+         dispatch(addBoughtProducts(basket))
+         dispatch(emptyBasket());
+     }
+
+     const getBasketTotal = () => {
+         return basket.reduce((amount, item) => item.price.cost + amount, 0)
+     }
 
 
      return (
@@ -21,7 +31,6 @@ const Checkout = () => {
              <Main>
                  <ShoppingCart>
                      <h2>Shopping Cart</h2>
-
                      {basket?.map((product) => (
                          <Product>
                              <Image>
@@ -43,18 +52,16 @@ const Checkout = () => {
                              <p>
                                Subtotal ( {basket.length} items ) : <strong> {value}</strong>
                              </p>
-
-
                          )}
                          decimalScale={2}
-                          // value={dispatch(getBasketTotal(basket))}
+                         value={getBasketTotal()}
                          displayType="text"
                          thousandSeparator={true}
-                         prefix={"₹ "}
+                         suffix={" tenge "}
                      />
 
-                     <button style = {{cursor: "pointer"}} onClick={() => navigate("/address")}>
-                         Proceed to Checkout
+                     <button style = {{cursor: "pointer", fontWeight: '700', fontSize: '18px'}} onClick={handleBuyProducts}>
+                         Buy Products
                      </button>
                  </Subtotal>
              </Main>

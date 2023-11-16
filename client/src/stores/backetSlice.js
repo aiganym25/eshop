@@ -2,7 +2,7 @@ import {createSlice} from "@reduxjs/toolkit";
 
 const initialState = {
     basket: [],
-    basketTotal: 0
+    basketTotal: 0,
 }
 
 export const basketSlice = createSlice({
@@ -11,6 +11,10 @@ export const basketSlice = createSlice({
     reducers: {
         addBasket: (state, action) => {
             state.basket = [...state.basket, action.payload];
+        },
+        emptyBasket: (state, action) => {
+            state.basket = [];
+            state.basketTotal = 0;
         },
         getBasketTotal: (state, action) => {
             state.basketTotal = action.payload.reduce((amount, item) => item.price + amount, 0);
@@ -40,4 +44,4 @@ export const basketSlice = createSlice({
 });
 
 export default basketSlice.reducer;
-export const {addBasket, getBasketTotal, reduceBasket } = basketSlice.actions;
+export const {addBasket, getBasketTotal, emptyBasket, reduceBasket } = basketSlice.actions;

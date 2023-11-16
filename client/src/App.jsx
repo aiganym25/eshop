@@ -7,6 +7,8 @@ import { Provider } from "react-redux";
 import store from "./stores/RootStore.js";
 import ProtectedRoutes from "./routes/ProtectedRoute.jsx";
 import Checkout from "./components/Checkout.jsx";
+import History from "./components/History.jsx";
+import LikedCards from "./components/LikedCards.jsx";
 
 function App() {
   return (
@@ -20,6 +22,8 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/signup" element={<SignUp />} />
                     <Route path = "/checkout" element = {<Checkout/>}/>
+                    <Route path = "history" element={<History/>}/>
+                    <Route path = "/liked-products" element={<LikedCards/>}/>
                 </Routes>
             </Container>
         </Provider>

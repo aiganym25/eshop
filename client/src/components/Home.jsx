@@ -1,29 +1,60 @@
-import axios from "axios";
+
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Card from "./Card";
 import Navbar from "./Navbar";
-import {useDispatch, useSelector} from "react-redux";
-import {setProducts} from "../stores/productsSlices.js";
+import { useSelector} from "react-redux";
 
 function Home() {
-    const storedProducts = localStorage.getItem("products");
-    const products = storedProducts ? JSON.parse(storedProducts) : null;
+    const storedProducts = JSON.parse(localStorage.getItem("products"));
+    const searchQuery = useSelector(state => state.searchQuery.searchQuery);
+    const filterByCategory = useSelector(state => state.category.filterByCategory);
+
+    const filteredProducts = storedProducts && storedProducts.data.filter((product) => {
+            return ( (filterByCategory === 'All' || product.category === filterByCategory) && (product.title.longTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            product.title.shortTitle.toLowerCase().includes(searchQuery.toLowerCase()))
+          )
+        }
+    );
+
+    const likedProducts = useSelector(state => state.products.likedProducts);
+    const recommendations = storedProducts && storedProducts.data.filter((product) => {
+        return likedProducts.some(likedProduct => likedProduct.category === product.category);
+    });
+
+    console.log(recommendations);
+
     return (
         <Container>
             <Navbar />
+            {recommendations.length !== 0 &&
+                <Recommendation>
+                    <h2>Recommended for You!!! </h2>
+                    <ul>
+                        {recommendations.map(recommendation => (
+                            <li key={recommendation.id}>{recommendation.title.shortTitle}</li>
+                        ))}
+                    </ul>
+                </Recommendation>}
             <Main>
-                {products &&
-                    products?.data.map((product) => (
-                        <Card
-                            key={product.id}
-                            product={product}
-                        />
-                    ))}
+                {filteredProducts.map((product) => (
+                    <Card
+                        key={product.id}
+                        product={product}
+                    />
+                ))}
             </Main>
         </Container>
     );
 }
+
+const Recommendation = styled.div`
+  width: 100%;
+  height: 100%;
+  background-color: #f2f2f2; 
+  padding: 20px; 
+  box-sizing: border-box; 
+`;
 
 const Container = styled.div`
   width: 100%;

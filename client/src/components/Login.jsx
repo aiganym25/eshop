@@ -2,45 +2,46 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
-import {useDispatch} from "react-redux";
-import {setAuthUserName} from "../stores/userSlice.js";
-import {setProducts} from "../stores/productsSlices.js";
-import {setCategories} from "../stores/categorySlice.js";
+import { useDispatch } from "react-redux";
+import { setAuthUserName } from "../stores/userSlice.js";
+import { setProducts } from "../stores/productsSlices.js";
+import { setCategories } from "../stores/categorySlice.js";
+import Loader from "react-js-loader";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const login = (e) => {
+  const login = async (e) => {
     e.preventDefault();
+    try {
+      setIsLoading(true);
+      const res = await axios.post("http://localhost:3003/auth/login", {
+        email,
+        password,
+      });
+      dispatch(setAuthUserName(res.data.fullName));
+      localStorage.setItem("user", JSON.stringify(res.data));
 
-    axios
-      .post("http://localhost:3003/auth/login", { email, password })
-      .then(async (res) => {
-          if (!res.data.error) {
-              // username
-              dispatch(setAuthUserName(res.data.fullName));
-              localStorage.setItem("user", JSON.stringify(res.data));
+      // products
+      const productsData = await axios.get("http://localhost:3003/getProducts");
+      dispatch(setProducts(productsData));
+      localStorage.setItem("products", JSON.stringify(productsData));
 
-              // products
-              const productsData = await axios.get("http://localhost:3003/getProducts");
-              dispatch(setProducts(productsData));
-              localStorage.setItem("products", JSON.stringify(productsData));
+      // categories
+      const categories = productsData.data.map((product) => product.category);
+      dispatch(setCategories(categories));
+      localStorage.setItem("categories", categories);
 
-              // categories
-              const categories = productsData.data.map((product) => product.category);
-              dispatch(setCategories(categories));
-              localStorage.setItem("categories", categories);
-
-              navigate("/");
-          } else if (res.data.error) {
-              alert(res.data.error);
-
-          }
-      })
-    .catch((err) => console.warn(err));
+      navigate("/");
+    } catch (er) {
+      alert("The username or password is incorrect");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -64,7 +65,26 @@ const Login = () => {
           value={password}
         />
       </InputContainer>
-      <LoginButton onClick={login}>Login</LoginButton>
+      <LoginButton onClick={login}>
+        {isLoading ? (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Loader
+              type="spinner-default"
+              // bgColor="#fff"
+              color="#fff"
+              size={5}
+            />
+          </div>
+        ) : (
+          "Login"
+        )}
+      </LoginButton>
 
       <SignUpContainer>
         Don&apos;t have an account?
@@ -121,7 +141,7 @@ const InputContainer = styled.div`
 `;
 
 const LoginButton = styled.div`
-  width: 70%;
+  width: 400px;
   height: 35px;
   background-color: #40b6e8;
   border: none;

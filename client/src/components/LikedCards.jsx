@@ -1,42 +1,52 @@
 import Navbar from "./Navbar.jsx";
 import styled from "styled-components";
-import {useSelector} from "react-redux";
+import { useSelector } from "react-redux";
 
 const LikedCards = () => {
-    const likedProducts = useSelector(state => state.products.likedProducts);
+  const likedProducts = useSelector((state) => state.products.likedProducts);
 
-    return (
-        <Container>
-            <Navbar />
-            <Main>
-                <ShoppingCart>
-                    <h2>Liked Products</h2>
-                    {likedProducts.map((product) => (
-                        <Product>
-                            <Image>
-                                <img src={product.url} alt="" />
-                            </Image>
-                            <Description>
-                                <h4>{product.title.shortTitle}</h4>
-                                <h4>{product.title.longTitle}</h4>
-                                <p>{product.price.cost}</p>
-
-                            </Description>
-                        </Product>
-                    ))}
-                </ShoppingCart>
-
-            </Main>
-         </Container>)
-}
+  return (
+    <Container>
+      <Navbar />
+      <Main>
+        <ShoppingCart>
+          <h2>Liked Products</h2>
+          {likedProducts.length === 0 ? (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignContent: "center",
+              }}
+            >
+              There is no liked products
+            </div>
+          ) : (
+            likedProducts.map((product) => (
+              <Product>
+                <Image>
+                  <img src={product.url} alt="" />
+                </Image>
+                <Description>
+                  <h4>{product.title.shortTitle}</h4>
+                  <h4>{product.title.longTitle}</h4>
+                  <p>{product.price.cost}</p>
+                </Description>
+              </Product>
+            ))
+          )}
+        </ShoppingCart>
+      </Main>
+    </Container>
+  );
+};
 const Container = styled.div`
   width: 100%;
-  max-width: 1400px;
-  height: fit-content;
-  margin: auto;
+  //max-width: 1400px;
+  height: 100%;
+  //margin: auto;
+  padding-left: 20px;
   background-color: rgb(234, 237, 237);
-  border: 1px solid red;
-  position: relative;
 `;
 const Main = styled.div`
   display: flex;
@@ -49,7 +59,7 @@ const Main = styled.div`
 const ShoppingCart = styled.div`
   padding: 15px;
   background-color: #fff;
-  flex: 0.7;
+  flex: 1;
 
   @media only screen and (max-width: 1200px) {
     flex: none;
@@ -98,7 +108,5 @@ const Description = styled.div`
     }
   }
 `;
-
-
 
 export default LikedCards;

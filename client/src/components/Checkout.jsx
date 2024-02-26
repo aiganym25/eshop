@@ -1,84 +1,90 @@
-import {useDispatch, useSelector} from "react-redux";
-import {useNavigate} from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar.jsx";
 import CurrencyFormat from "react-currency-format";
 import styled from "styled-components";
-import {addBasket, emptyBasket, getBasketTotal, reduceBasket} from "../stores/backetSlice.js";
-import {addBoughtProducts} from "../stores/productsSlices.js";
+import {
+  addBasket,
+  emptyBasket,
+  getBasketTotal,
+  reduceBasket,
+} from "../stores/backetSlice.js";
+import { addBoughtProducts } from "../stores/productsSlices.js";
 const Checkout = () => {
-     const basket = useSelector((state) => state.basket.basket);
-     const dispatch = useDispatch();
+  const basket = useSelector((state) => state.basket.basket);
+  const dispatch = useDispatch();
 
-     const removeFromBasket = (e, id) => {
-         // e.preventDefault();
-         dispatch(reduceBasket(id))
-     };
+  const removeFromBasket = (e, id) => {
+    // e.preventDefault();
+    dispatch(reduceBasket(id));
+  };
 
-     const handleBuyProducts = () => {
-         alert("You have successfully bought these products");
-         dispatch(addBoughtProducts(basket))
-         dispatch(emptyBasket());
-     }
+  const handleBuyProducts = () => {
+    alert("You have successfully bought these products");
+    dispatch(addBoughtProducts(basket));
+    dispatch(emptyBasket());
+  };
 
-     const getBasketTotal = () => {
-         return basket.reduce((amount, item) => item.price.cost + amount, 0)
-     }
+  const getBasketTotal = () => {
+    return basket.reduce((amount, item) => item.price.cost + amount, 0);
+  };
 
+  return (
+    <Container>
+      <Navbar />
+      <Main>
+        <ShoppingCart>
+          <h2>Shopping Cart</h2>
+          {basket?.map((product) => (
+            <Product>
+              <Image>
+                <img src={product.url} alt="" />
+              </Image>
+              <Description>
+                <h4>{product.title.longTitle}</h4>
+                <p> {product.price.cost} tenge</p>
+                <button onClick={(e) => removeFromBasket(e, product.id)}>
+                  Remove
+                </button>
+              </Description>
+            </Product>
+          ))}
+        </ShoppingCart>
+        <Subtotal>
+          <CurrencyFormat
+            renderText={(value) => (
+              <p>
+                Subtotal ( {basket.length} items ) : <strong> {value}</strong>
+              </p>
+            )}
+            decimalScale={2}
+            value={getBasketTotal()}
+            displayType="text"
+            thousandSeparator={true}
+            suffix={" tenge "}
+          />
 
-     return (
-         <Container>
-             <Navbar />
-             <Main>
-                 <ShoppingCart>
-                     <h2>Shopping Cart</h2>
-                     {basket?.map((product) => (
-                         <Product>
-                             <Image>
-                                 <img src={product.url} alt="" />
-                             </Image>
-                             <Description>
-                                 <h4>{product.title.longTitle}</h4>
-                                 <p> {product.price.cost} tenge</p>
-                                 <button onClick={(e) => removeFromBasket(e, product.id)}>
-                                     Remove
-                                 </button>
-                             </Description>
-                         </Product>
-                     ))}
-                 </ShoppingCart>
-                 <Subtotal>
-                     <CurrencyFormat
-                         renderText={(value) => (
-                             <p>
-                               Subtotal ( {basket.length} items ) : <strong> {value}</strong>
-                             </p>
-                         )}
-                         decimalScale={2}
-                         value={getBasketTotal()}
-                         displayType="text"
-                         thousandSeparator={true}
-                         suffix={" tenge "}
-                     />
+          <button
+            style={{ cursor: "pointer", fontWeight: "700", fontSize: "18px" }}
+            onClick={handleBuyProducts}
+          >
+            Buy Products
+          </button>
+        </Subtotal>
+      </Main>
+    </Container>
+  );
+};
 
-                     <button style = {{cursor: "pointer", fontWeight: '700', fontSize: '18px'}} onClick={handleBuyProducts}>
-                         Buy Products
-                     </button>
-                 </Subtotal>
-             </Main>
-         </Container>
-     );
- }
-
- const Container = styled.div`
+const Container = styled.div`
   width: 100%;
-  max-width: 1400px;
-  height: fit-content;
+  //max-width: 1400px;
+  height: 100%;
   margin: auto;
   background-color: rgb(234, 237, 237);
-  border: 1px solid red;
   position: relative;
 `;
- const Main = styled.div`
+const Main = styled.div`
   display: flex;
   padding: 15px;
 
@@ -86,7 +92,7 @@ const Checkout = () => {
     flex-direction: column;
   }
 `;
- const ShoppingCart = styled.div`
+const ShoppingCart = styled.div`
   padding: 15px;
   background-color: #fff;
   flex: 0.7;
@@ -101,7 +107,7 @@ const Checkout = () => {
     padding-bottom: 15px;
   }
 `;
- const Subtotal = styled.div`
+const Subtotal = styled.div`
   flex: 0.3;
   background-color: #fff;
   margin-left: 15px;
@@ -141,18 +147,18 @@ const Checkout = () => {
   }
 `;
 
- const Product = styled.div`
+const Product = styled.div`
   display: flex;
   align-items: center;
 `;
 
- const Image = styled.div`
+const Image = styled.div`
   flex: 0.3;
   img {
     width: 100%;
   }
 `;
- const Description = styled.div`
+const Description = styled.div`
   flex: 0.7;
 
   h4 {

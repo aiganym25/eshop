@@ -1,56 +1,66 @@
 import Navbar from "./Navbar.jsx";
 import CurrencyFormat from "react-currency-format";
 import styled from "styled-components";
-import {useSelector} from "react-redux";
+import { useSelector } from "react-redux";
 
 const History = () => {
+  const boughtProducts = useSelector((state) => state.products.boughtProducts);
+  console.log(boughtProducts);
 
-    const boughtProducts = useSelector(state => state.products.boughtProducts);
-    console.log(boughtProducts);
-
-    return(<Container>
-        <Navbar />
-        <Main>
-            <ShoppingCart>
-                <h2>History of bought products</h2>
-                {boughtProducts.map((product) => (
-                    <Product>
-                        <Image>
-                            <img src={product.url} alt="" />
-                        </Image>
-                        <Description>
-                            <h4>{product.title.longTitle}</h4>
-
-
-                        </Description>
-                    </Product>
-                ))}
-            </ShoppingCart>
-
-        </Main>
-    </Container>)
-}
+  return (
+    <Container>
+      <Navbar />
+      <Main>
+        <ShoppingCart>
+          <h2>History of bought products</h2>
+          {boughtProducts.length === 0 ? (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                fontSize: 30,
+                fontWeight: 600,
+              }}
+            >
+              There are no bought products yet
+            </div>
+          ) : (
+            boughtProducts.map((product) => (
+              <Product>
+                <Image>
+                  <img src={product.url} alt="" />
+                </Image>
+                <Description>
+                  <h4>{product.title.longTitle}</h4>
+                </Description>
+              </Product>
+            ))
+          )}
+        </ShoppingCart>
+      </Main>
+    </Container>
+  );
+};
 const Container = styled.div`
   width: 100%;
-  max-width: 1400px;
-  height: fit-content;
+  height: 100%;
   margin: auto;
   background-color: rgb(234, 237, 237);
-  border: 1px solid red;
-  position: relative;
 `;
 const Main = styled.div`
   display: flex;
   padding: 15px;
-
+  height: 100%;
+  width: 100%;
   @media only screen and (max-width: 1200px) {
     flex-direction: column;
   }
 `;
 const ShoppingCart = styled.div`
-  padding: 15px;
+  padding: 30px;
   background-color: #fff;
-  flex: 0.7;
+  flex: 1;
 
   @media only screen and (max-width: 1200px) {
     flex: none;
@@ -66,10 +76,11 @@ const ShoppingCart = styled.div`
 const Product = styled.div`
   display: flex;
   align-items: center;
+  padding-top: 20px;
 `;
 
 const Image = styled.div`
-  flex: 0.3;
+  flex: 0.15;
   img {
     width: 100%;
   }

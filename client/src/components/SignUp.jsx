@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import axios from "axios"
-import {setAuthUserName} from "../stores/userSlice.js";
-import {useDispatch} from "react-redux";
-import {setProducts} from "../stores/productsSlices.js";
+import axios from "axios";
+import { setAuthUserName } from "../stores/userSlice.js";
+import { useDispatch } from "react-redux";
+import { setProducts } from "../stores/productsSlices.js";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -15,15 +15,15 @@ export default function SignUp() {
 
   const signup = (e) => {
     e.preventDefault();
-
     axios
       .post("http://localhost:3003/auth/signup", { email, password, fullName })
-      .then((res) =>  {
-          navigate("/login");
-          dispatch(setAuthUserName(fullName));
+      .then((res) => {
+        navigate("/login");
+        dispatch(setAuthUserName(fullName));
       })
-      .catch((err) => console.warn(err));
+      .catch((err) => alert(err));
   };
+
   return (
     <FormContainer>
       <h3>Sign-Up </h3>

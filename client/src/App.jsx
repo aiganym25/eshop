@@ -9,25 +9,26 @@ import ProtectedRoutes from "./routes/ProtectedRoute.jsx";
 import Checkout from "./components/Checkout.jsx";
 import History from "./components/History.jsx";
 import LikedCards from "./components/LikedCards.jsx";
+import Profile from "./components/Profile.jsx";
 
 function App() {
   return (
     <BrowserRouter>
-        <Provider store = {store}>
-            <Container>
-                <Routes>
-                    <Route path="/" element={<ProtectedRoutes />}>
-                        <Route path="/" element={<Home/>} />
-                    </Route>
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/signup" element={<SignUp />} />
-                    <Route path = "/checkout" element = {<Checkout/>}/>
-                    <Route path = "history" element={<History/>}/>
-                    <Route path = "/liked-products" element={<LikedCards/>}/>
-                </Routes>
-            </Container>
-        </Provider>
-
+      <Provider store={store}>
+        <Container>
+          <Routes>
+            <Route path="/" element={<ProtectedRoutes />}>
+              <Route path="/" element={<Home />} />
+            </Route>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="history" element={<History />} />
+            <Route path="/liked-products" element={<LikedCards />} />
+            <Route path="/profile" element={<Profile />} />
+          </Routes>
+        </Container>
+      </Provider>
     </BrowserRouter>
   );
 }

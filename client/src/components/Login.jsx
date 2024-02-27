@@ -24,6 +24,7 @@ const Login = () => {
         password,
       });
       dispatch(setAuthUserName(res.data.fullName));
+      dispatch(setAuthUserName(res.data.email));
       localStorage.setItem("user", JSON.stringify(res.data));
 
       // products
@@ -141,7 +142,7 @@ const InputContainer = styled.div`
 `;
 
 const LoginButton = styled.div`
-  width: 400px;
+  width: 70%;
   height: 35px;
   background-color: #40b6e8;
   border: none;

@@ -7,7 +7,6 @@ import {
   addLikedProducts,
   removeFromLikedProducts,
 } from "../stores/productsSlices.js";
-// import Rating from "@material-ui/lab/Rating";
 
 function Card({ product }) {
   const dispatch = useDispatch();

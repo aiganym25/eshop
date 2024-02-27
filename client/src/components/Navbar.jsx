@@ -1,89 +1,124 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import {useDispatch, useSelector} from "react-redux";
-import {setAuthUserName} from "../stores/userSlice.js";
-import {setProducts} from "../stores/productsSlices.js";
-import {setSearchQuery} from "../stores/searchQuerySlice.js";
-import {setCategories, setFilterByCategory} from "../stores/categorySlice.js";
-import { FaUser } from 'react-icons/fa';
+import { useDispatch, useSelector } from "react-redux";
+import { setAuthUserName } from "../stores/userSlice.js";
+import { setProducts } from "../stores/productsSlices.js";
+import { setSearchQuery } from "../stores/searchQuerySlice.js";
+import { setCategories, setFilterByCategory } from "../stores/categorySlice.js";
+import { FaUser } from "react-icons/fa";
 function Navbar() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const authUsername = useSelector((state) => state.authUsername.authUsername);
+  const basket = useSelector((state) => state.basket.basket);
+  const filterByCategory = useSelector(
+    (state) => state.category.filterByCategory,
+  );
+  // const categories = useSelector(state => state.category.categories);
+  const products = JSON.parse(localStorage.getItem("products"));
+  console.log(products);
 
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const authUsername = useSelector((state) => state.authUsername.authUsername);
-    const basket = useSelector((state) => state.basket.basket);
-    const filterByCategory = useSelector(state => state.category.filterByCategory);
-    // const categories = useSelector(state => state.category.categories);
-    const products = JSON.parse(localStorage.getItem("products"));
+  const categories = products.data
+    ? ["All", ...new Set(products.data.map((product) => product.category))]
+    : ["All", ...new Set(products.map((product) => product.category))];
 
-    const categories = ['All', ...new Set(products.data.map(product => product.category))]
+  const [showOptions, setShowOptions] = useState(false);
 
-    const [showOptions, setShowOptions] = useState(false);
+  const handleGoToHistory = () => {
+    navigate("/history");
+  };
+  const handleGoToHome = () => {
+    navigate("/");
+  };
+  const handleGoToProfile = () => {
+    navigate("/profile");
+  };
 
-    const handleGoToHistory = () => {
-        navigate("/history");
-    };
+  // Function to toggle the visibility of options
+  const toggleOptions = () => {
+    setShowOptions(!showOptions);
+  };
+  const onSearchInputChange = (e) => {
+    dispatch(setSearchQuery(e.target.value));
+  };
+  const handleCategoryChange = (e) => {
+    dispatch(setFilterByCategory(e.target.value));
+  };
 
-    // Function to toggle the visibility of options
-    const toggleOptions = () => {
-        setShowOptions(!showOptions);
-    };
-    const onSearchInputChange = (e) => {
-         dispatch(setSearchQuery(e.target.value));
-    }
-    const handleCategoryChange = (e) => {
-        dispatch(setFilterByCategory(e.target.value));
-    };
+  const handleSignOut = () => {
+    localStorage.removeItem("user");
+    dispatch(setAuthUserName(""));
+    navigate("/login");
+  };
 
-    const handleSignOut = () => {
-        localStorage.removeItem("user");
-        dispatch(setAuthUserName(""));
-        navigate("/login");
-    };
+  const handleGoToLikedProducts = () => {
+    navigate("/liked-products");
+  };
 
-    const handleGoToLikedProducts = () => {
-        navigate("/liked-products")
-    }
+  return (
+    <Container>
+      <Inner>
+        <SearchBar>
+          <FilterContainer>
+            <Select
+              onChange={handleCategoryChange}
+              value={filterByCategory || "All"}
+            >
+              {categories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </Select>
+          </FilterContainer>
+          <input
+            type="text"
+            placeholder="Search..."
+            onChange={onSearchInputChange}
+          />
+        </SearchBar>
+        <RightContainer>
+          <BasketButton onClick={() => navigate("/checkout")}>
+            <img src="./basket-icon.png" alt="" />
+            <p>{basket.length}</p>
+          </BasketButton>
+          <NavButton onClick={toggleOptions}>
+            <FaUser
+              style={{
+                justifyContent: "center",
+                marginLeft: "5px",
+                cursor: "pointer",
+              }}
+            />
+          </NavButton>
+          <OptionsModal visible={showOptions}>
+            <p style={{ margin: "5px 0 10px 0" }} onClick={handleGoToHome}>
+              Home
+            </p>
+            <p style={{ margin: "5px 0 10px 0" }} onClick={handleGoToProfile}>
+              Profile
+            </p>
+            <p style={{ margin: "5px 0 10px 0" }} onClick={handleGoToHistory}>
+              Go to History
+            </p>
 
-
-
-    return (
-        <Container>
-            <Inner>
-                <SearchBar>
-                    <FilterContainer>
-                        <Select onChange={handleCategoryChange} value={filterByCategory || 'All'}>
-                            {categories.map(category => (
-                                <option key={category} value={category}>
-                                    {category}
-                                </option>
-                            ))}
-                        </Select>
-                    </FilterContainer>
-                    <input type="text" placeholder="Search..." onChange={onSearchInputChange} />
-                </SearchBar>
-                <RightContainer>
-
-                    <BasketButton onClick={() => navigate("/checkout")}>
-                        <img src="./basket-icon.png" alt="" />
-                        <p>{basket.length}</p>
-                    </BasketButton>
-                    <NavButton
-                        onClick={toggleOptions}
-                    >
-                        <FaUser style={{justifyContent: 'center',  marginLeft: '5px', cursor: 'pointer' }} />
-                    </NavButton>
-                    <OptionsModal visible={showOptions}>
-                        <p style = {{ margin: "5px 0 10px 0"}} onClick={handleGoToHistory}>Go to History</p>
-                        <p style = {{ margin: "0 0 10px 0"}} onClick={handleGoToLikedProducts}>Liked Products</p>
-                        <p style = {{ margin: "0 0 5px 0"}} onClick={handleSignOut}>Sign Out</p>
-                    </OptionsModal>
-                </RightContainer>
-            </Inner>
-        </Container>
-    );
+            <p
+              style={{ margin: "0 0 10px 0" }}
+              onClick={handleGoToLikedProducts}
+            >
+              Liked Products
+            </p>
+            <p style={{ margin: "0 0 5px 0" }} onClick={handleSignOut}>
+              Sign Out
+            </p>
+          </OptionsModal>
+        </RightContainer>
+      </Inner>
+    </Container>
+  );
 }
+
 const OptionsModal = styled.div`
   position: absolute;
   z-index: 99;
@@ -93,9 +128,9 @@ const OptionsModal = styled.div`
   border: 2px solid #ccc;
   border-radius: 5px;
   padding: 10px;
-   display: ${props => (props.visible ? 'block' : 'none')};
-  
-  p{
+  display: ${(props) => (props.visible ? "block" : "none")};
+
+  p {
     cursor: pointer;
     font-size: 16px;
     font-weight: 600;
@@ -133,8 +168,7 @@ const FilterContainer = styled.div`
   border-radius: 5px 0 0 5px;
   background: #98b5ec;
   cursor: pointer;
-
-`
+`;
 
 const Select = styled.select`
   width: 100%;
@@ -143,9 +177,9 @@ const Select = styled.select`
   border-radius: 0 5px 5px 0;
   background: #c2b6b6;
   cursor: pointer;
-  
-  option{
-    cursor: pointer
+
+  option {
+    cursor: pointer;
   }
 `;
 

@@ -10,6 +10,7 @@ function Home() {
   const filterByCategory = useSelector(
     (state) => state.category.filterByCategory,
   );
+  const authUsername = useSelector((state) => state.authUsername.authUsername);
 
   const filteredProducts = storedProducts.data
     ? storedProducts.data.filter((product) => {
@@ -50,8 +51,6 @@ function Home() {
         ),
       );
 
-  console.log(recommendations);
-
   return (
     <Container>
       <Navbar />
@@ -65,6 +64,16 @@ function Home() {
           </ul>
         </Recommendation>
       )}
+      <div
+        style={{
+          fontWeight: 700,
+          fontSize: "24px",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        Hello, {authUsername}
+      </div>
       <Main>
         {filteredProducts.map((product) => (
           <Card key={product.id} product={product} />

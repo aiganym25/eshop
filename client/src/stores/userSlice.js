@@ -18,4 +18,4 @@ export const authUsernameSlice = createSlice({
 });
 
 export default authUsernameSlice.reducer;
-export const { setAuthUserName } = authUsernameSlice.actions;
+export const { setAuthUserName, setAuthEmail } = authUsernameSlice.actions;

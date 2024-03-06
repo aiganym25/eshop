@@ -107,4 +107,38 @@ router.post("/auth/signup", async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
+router.put("/update-profile", async (req, res) => {
+  try {
+    console.log("sdfsfds");
+    const { newUsername, newEmail, authUsername } = req.body;
+
+    // Find the user by authUsername
+    const user = await Users.findOne({ fullName: authUsername });
+    console.log(user);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Update username if provided
+    if (newUsername) {
+      user.fullName = newUsername;
+    }
+
+    // Update email if provided
+    if (newEmail) {
+      user.email = newEmail;
+    }
+
+    // Save the updated user
+    await user.save();
+
+    res.status(200).json({ message: "Profile updated successfully", user });
+  } catch (error) {
+    console.error("Error updating profile:", error.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 module.exports = router;

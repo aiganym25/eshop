@@ -10,6 +10,7 @@ import Checkout from "./components/Checkout.jsx";
 import History from "./components/History.jsx";
 import LikedCards from "./components/LikedCards.jsx";
 import Profile from "./components/Profile.jsx";
+import ProfileP from "./components/ProfileP.jsx";
 
 function App() {
   return (
@@ -25,7 +26,7 @@ function App() {
             <Route path="/checkout" element={<Checkout />} />
             <Route path="history" element={<History />} />
             <Route path="/liked-products" element={<LikedCards />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/profile" element={<ProfileP />} />
           </Routes>
         </Container>
       </Provider>

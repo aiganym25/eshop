@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
-import { setAuthUserName } from "../stores/userSlice.js";
+import { setAuthUserName, setAuthEmail } from "../stores/userSlice.js";
 import { useDispatch } from "react-redux";
 import { setProducts } from "../stores/productsSlices.js";
 
@@ -20,6 +20,7 @@ export default function SignUp() {
       .then((res) => {
         navigate("/login");
         dispatch(setAuthUserName(fullName));
+        dispatch(setAuthEmail(email));
       })
       .catch((err) => alert(err));
   };

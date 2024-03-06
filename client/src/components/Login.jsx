@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { setAuthUserName } from "../stores/userSlice.js";
+import { setAuthUserName, setAuthEmail } from "../stores/userSlice.js";
 import { setProducts } from "../stores/productsSlices.js";
 import { setCategories } from "../stores/categorySlice.js";
 import Loader from "react-js-loader";
@@ -24,7 +24,7 @@ const Login = () => {
         password,
       });
       dispatch(setAuthUserName(res.data.fullName));
-      dispatch(setAuthUserName(res.data.email));
+      dispatch(setAuthEmail(res.data.email));
       localStorage.setItem("user", JSON.stringify(res.data));
 
       // products
